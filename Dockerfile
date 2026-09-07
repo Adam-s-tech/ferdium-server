@@ -1,4 +1,4 @@
-FROM node:24.18.1-alpine as builder
+FROM node:24.20.0-alpine AS builder
 
 WORKDIR /server-build
 
@@ -8,6 +8,7 @@ ENV CI=true
 
 COPY package*.json ./
 COPY .npmrc ./
+COPY pnpm-workspace.yaml ./
 COPY patches ./patches
 
 RUN npm i -gf "pnpm@$(node -p 'require("./package.json").engines.pnpm')" && pnpm -v
@@ -18,7 +19,7 @@ COPY . .
 RUN pnpm build
 
 # ---- RUNTIME IMAGE ----------------------------------------------------------
-FROM node:24.18.1-alpine
+FROM node:24.20.0-alpine
 
 WORKDIR /app
 LABEL maintainer="ferdium"
